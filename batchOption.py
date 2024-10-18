@@ -30,6 +30,17 @@ class batchOption():
         print(f'addr -{addr}- balance : {eth}')
 
 
+    def show_wallet(self):
+        sql_data = f"select * from BatchWallet"
+        accounts = self.db_account.getData(sql_data)
+        account_count  = len(accounts)
+        for index in range(0, account_count):
+            address = accounts[index][0]
+            key = accounts[index][1]
+            print(f"{index}-Addr: {address}")
+            print(f'token balance is:{self.m_cnt.balanceOf(address)}')
+            # print(f"receipt is {receipt}")
+
     def offlineSign(self, privkey, to, amount):
         if len(to) != 40 and (len(to) != 42 or to[0:2] != '0x'):
             return json.dumps({'code': 1, 'data': 'Invalid address'})
@@ -59,33 +70,35 @@ class batchOption():
         return tx_hash.hex(), tx_receipt
 
 
-    def batchTransfer(self, privkey:str, amount:float):
+    def batchTransfer(self, privkey:str, amount:float, retry_idx:int):
         sql_data = f"select * from BatchWallet"
         accounts = self.db_account.getData(sql_data)
         account_count  = len(accounts)
-        for index in range(0, account_count):
+        for index in range(retry_idx, account_count):
             address = accounts[index][0]
             txid, receipt = self.offlineSign(privkey, address, amount)
 
-            print(f"Transfer Process Address: {address}")
+            print(f"{index}-Transfer Process Address: {address}")
             print(f"txid is {txid}")
             # print(f"receipt is {receipt}")
+            time.sleep(1)
 
     # 合约操作
-    def batchMint(self):
+    def batchMint(self, retry_idx:int):
         sql_data = f"select * from BatchWallet"
         accounts = self.db_account.getData(sql_data)
         
         account_count  = len(accounts)
-        for index in range(0, account_count):
+        for index in range(retry_idx, account_count):
             address = accounts[index][0]
             privkey = accounts[index][1]
             sendfrom = eth_account.Account.from_key(privkey)
             print(sendfrom.address)
             txid= self.m_cnt.mint(privkey);
-            print(f"Mint address : {address}")
+            print(f"{index}-Mint address : {address}")
             print(f"txid is {txid}")
             # print(f"receipt is {receipt}")
+            time.sleep(1)
 
 
     def query_gas_price(self):
@@ -97,12 +110,12 @@ class batchOption():
     def query_token_amount(self, addr):
         print(f'token balance is:{self.m_cnt.balanceOf(addr)}')
     
-    def batchCollection(self, masterAddr, tokenAmount):
+    def batchCollection(self, masterAddr, tokenAmount, retry_idx):
         sql_data = f"select * from BatchWallet"
         accounts = self.db_account.getData(sql_data)
         
         account_count  = len(accounts)
-        for index in range(0, account_count):
+        for index in range(retry_idx, account_count):
             address = accounts[index][0]
             privkey = accounts[index][1]
             sendfrom = eth_account.Account.from_key(privkey)

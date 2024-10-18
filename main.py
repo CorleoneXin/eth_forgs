@@ -32,19 +32,19 @@ if __name__ == "__main__":
     cls = batchOption.batchOption(DB_NAME, CONTRACT_ABI, CONTRACT_ADDR, RPC_URL)
     # 查询链接状态及合约状态
     # 查询价格， gas-price目前是自动从网络上获取的。
-    cls.query_gas_price()
+    cls.show_wallet()
+    
     # cls.get_master_balance(MASTER_KEY)
-    cls.get_addr_balance('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
-    cls.query_cnt_owner()
+    # cls.get_addr_balance('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
+    # cls.query_cnt_owner()
+    # # 查询代币balance
+    # cls.query_token_amount('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
     
-    # 查询代币balance
-    cls.query_token_amount('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
-    
-    # # 执行批量转帐
-    # cls.batchTransfer(MASTER_KEY, TRANSFER_AMOUNT)
+    # 执行批量转帐
+    # cls.batchTransfer(MASTER_KEY, TRANSFER_AMOUNT, 8)
     
     # # 执行批量mint
-    # cls.batchMint()
+    # cls.batchMint(0)
     
     ## 执行批量归集
-    # cls.batchCollection(MASTER_ADDR, 10000000000000000000000000000)
+    # cls.batchCollection(MASTER_ADDR, 10000000000000000000000000000, 0)
