@@ -29,7 +29,6 @@ class batchOption():
         eth = web3.Web3.from_wei(res, 'ether')
         print(f'addr -{addr}- balance : {eth}')
 
-
     def show_wallet(self):
         sql_data = f"select * from BatchWallet"
         accounts = self.db_account.getData(sql_data)
@@ -38,8 +37,13 @@ class batchOption():
             address = accounts[index][0]
             key = accounts[index][1]
             print(f"{index}-Addr: {address}")
-            print(f'token balance is:{self.m_cnt.balanceOf(address)}')
-            # print(f"receipt is {receipt}")
+            print(f"key: {key}")
+            eth_balance = self.w3.eth.get_balance(address)
+            eth = web3.Web3.from_wei(eth_balance, 'ether')
+            print(f'eth balance is : {eth}')
+            
+            print(f'token balance is : {self.m_cnt.balanceOf(address)}')
+
 
     def offlineSign(self, privkey, to, amount):
         if len(to) != 40 and (len(to) != 42 or to[0:2] != '0x'):

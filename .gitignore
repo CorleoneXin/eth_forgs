@@ -3,4 +3,4 @@ db/*
 __pycache__
 .env
 db_*
-.env_*
+.env_aia

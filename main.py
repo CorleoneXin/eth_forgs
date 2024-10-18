@@ -24,27 +24,39 @@ print(f'CONTRACT_ABI : {CONTRACT_ABI}')
 import generateKey
 import batchOption
 
-if __name__ == "__main__":
-    # # 先生成地址
-    # generateKey.generateKey(DB_NAME, int(GERERATE_KEY_AMOUNT))
+cls = batchOption.batchOption(DB_NAME, CONTRACT_ABI, CONTRACT_ADDR, RPC_URL)
 
-    # 批量操作 class
-    cls = batchOption.batchOption(DB_NAME, CONTRACT_ABI, CONTRACT_ADDR, RPC_URL)
+def queryStatus():
     # 查询链接状态及合约状态
     # 查询价格， gas-price目前是自动从网络上获取的。
-    cls.show_wallet()
-    
+    cls.query_gas_price()
     # cls.get_master_balance(MASTER_KEY)
-    # cls.get_addr_balance('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
+    # cls.get_addr_balance(MASTER_KEY)
     # cls.query_cnt_owner()
-    # # 查询代币balance
-    # cls.query_token_amount('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
+    # cls.query_token_amount(MASTER_KEY)
     
-    # 执行批量转帐
+def query_wallet_balance():
+    cls.show_wallet()
+
+def batch_op():
+    # # 执行批量转帐
     # cls.batchTransfer(MASTER_KEY, TRANSFER_AMOUNT, 8)
     
     # # 执行批量mint
     # cls.batchMint(0)
     
-    ## 执行批量归集
-    # cls.batchCollection(MASTER_ADDR, 10000000000000000000000000000, 0)
+    # 执行批量归集
+    cls.batchCollection(MASTER_ADDR, 4500000000000000000000000, 0)
+
+if __name__ == "__main__":
+    # 生成地址
+    # generateKey.generateKey(DB_NAME, int(GERERATE_KEY_AMOUNT))
+    
+    # 查询，测试链接
+    # queryStatus()
+    
+    # 查询 子钱包余额 eth/token
+    # query_wallet_balance()
+    
+    # 批量操作
+    batch_op()
