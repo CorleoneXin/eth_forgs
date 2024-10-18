@@ -24,6 +24,12 @@ class batchOption():
         eth = web3.Web3.from_wei(res, 'ether')
         print(f'master addr -{sendfrom.address}- balance : {eth}')
 
+    def get_addr_balance(self, addr:str):
+        res = self.w3.eth.get_balance(addr)
+        eth = web3.Web3.from_wei(res, 'ether')
+        print(f'addr -{addr}- balance : {eth}')
+
+
     def offlineSign(self, privkey, to, amount):
         if len(to) != 40 and (len(to) != 42 or to[0:2] != '0x'):
             return json.dumps({'code': 1, 'data': 'Invalid address'})

@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('.env_test')
 
 DB_NAME = os.getenv("DB_NAME")
 GERERATE_KEY_AMOUNT = os.getenv("GERERATE_KEY_AMOUNT")
@@ -31,13 +31,14 @@ if __name__ == "__main__":
     # 批量操作 class
     cls = batchOption.batchOption(DB_NAME, CONTRACT_ABI, CONTRACT_ADDR, RPC_URL)
     # 查询链接状态及合约状态
-    cls.get_master_balance(MASTER_KEY)
-    cls.query_cnt_owner()
     # 查询价格， gas-price目前是自动从网络上获取的。
     cls.query_gas_price()
+    # cls.get_master_balance(MASTER_KEY)
+    cls.get_addr_balance('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
+    cls.query_cnt_owner()
     
     # 查询代币balance
-    balance = cls.query_token_amount('0xb3966CF2797F9c1ce9C9BF050d1dBf540Fcb66C1')
+    cls.query_token_amount('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
     
     # # 执行批量转帐
     # cls.batchTransfer(MASTER_KEY, TRANSFER_AMOUNT)

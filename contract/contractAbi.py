@@ -5,8 +5,8 @@ import eth_account
 
 class contractAbi(object):
     def __init__(self, json_abi, contract_address, endpoint):
-        if endpoint.find('http://') == -1:
-            endpoint = 'http://' + endpoint
+        # if endpoint.find('http://') == -1:
+        #     endpoint = 'http://' + endpoint
         self.web3 = Web3(Web3.HTTPProvider(endpoint))
         ckaddress = web3.Web3.to_checksum_address(contract_address)
         self.contract = self.web3.eth.contract(address=ckaddress, abi=json_abi)
