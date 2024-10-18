@@ -36,8 +36,8 @@ class contractAbi(object):
                                                 'gasPrice':gasprice, 'from': address, 'nonce':nonce})
         signed_tx = sendfrom.sign_transaction(unsigned_tx)
         txid = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        tx_receipt = self.web3.eth.wait_for_transaction_receipt(txid)
-        return txid.hex(), tx_receipt
+        # tx_receipt = self.web3.eth.wait_for_transaction_receipt(txid)
+        return txid.hex()
     
     def transfer(self, privKey, addr, value):
         sendfrom = eth_account.Account.from_key(privKey)
@@ -55,6 +55,6 @@ class contractAbi(object):
                                                 'gasPrice':gasprice, 'from': address, 'nonce':nonce})
         signed_tx = sendfrom.sign_transaction(unsigned_tx)
         txid = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        tx_receipt = self.web3.eth.wait_for_transaction_receipt(txid)
-        return txid.hex(), tx_receipt
+        # tx_receipt = self.web3.eth.wait_for_transaction_receipt(txid)
+        return txid.hex()
     

@@ -76,7 +76,7 @@ class batchOption():
             privkey = accounts[index][1]
             sendfrom = eth_account.Account.from_key(privkey)
             print(sendfrom.address)
-            txid ,receipt= self.m_cnt.mint(privkey);
+            txid= self.m_cnt.mint(privkey);
             print(f"Mint address : {address}")
             print(f"txid is {txid}")
             # print(f"receipt is {receipt}")
@@ -101,7 +101,7 @@ class batchOption():
             privkey = accounts[index][1]
             sendfrom = eth_account.Account.from_key(privkey)
             print(sendfrom.address)
-            txid ,receipt= self.m_cnt.transfer(privkey, masterAddr, tokenAmount);
+            txid= self.m_cnt.transfer(privkey, masterAddr, tokenAmount);
             print(f"Collection address : {address}")
             print(f"txid is {txid}")
             # print(f"receipt is {receipt}")
