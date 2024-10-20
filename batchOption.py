@@ -29,15 +29,15 @@ class batchOption():
         eth = web3.Web3.from_wei(res, 'ether')
         print(f'addr -{addr}- balance : {eth}')
 
-    def show_wallet(self):
+    def show_wallet(self, retry_idx):
         sql_data = f"select * from BatchWallet"
         accounts = self.db_account.getData(sql_data)
         account_count  = len(accounts)
-        for index in range(0, account_count):
+        for index in range(retry_idx, account_count):
             address = accounts[index][0]
             key = accounts[index][1]
             print(f"{index}-Addr: {address}")
-            print(f"key: {key}")
+            # print(f"key: {key}")
             eth_balance = self.w3.eth.get_balance(address)
             eth = web3.Web3.from_wei(eth_balance, 'ether')
             print(f'eth balance is : {eth}')
@@ -50,7 +50,7 @@ class batchOption():
             return json.dumps({'code': 1, 'data': 'Invalid address'})
 
         sendfrom = eth_account.Account.from_key(privkey)
-        price = self.w3.eth.gas_price 
+        price = self.w3.eth.gas_price
         nonce = self.w3.eth.get_transaction_count(sendfrom.address, "pending")
         idC = self.w3.eth.chain_id;
         # 准备交易（不包括gas限制）
@@ -71,6 +71,7 @@ class batchOption():
         tx_hash = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
         # 等待交易被确认
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        # tx_receipt = 0
         return tx_hash.hex(), tx_receipt
 
 
@@ -124,7 +125,11 @@ class batchOption():
             privkey = accounts[index][1]
             sendfrom = eth_account.Account.from_key(privkey)
             print(sendfrom.address)
-            txid= self.m_cnt.transfer(privkey, masterAddr, tokenAmount);
-            print(f"Collection address : {address}")
-            print(f"txid is {txid}")
+            toklen_balance = self.m_cnt.balanceOf(address)
+            if toklen_balance != 0:
+                txid= self.m_cnt.transfer(privkey, masterAddr, tokenAmount);
+                print(f"Collection address : {address}")
+                print(f"txid is {txid}")
+            else:
+                print('skip , no Amounmt')
             # print(f"receipt is {receipt}")
