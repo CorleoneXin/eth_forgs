@@ -46,7 +46,9 @@ def batch_op():
     # cls.batchMint(0)
     
     # 执行批量归集
-    cls.batchCollection(MASTER_ADDR, 50000000000000000000000, 0)
+    # cls.batchCollection(MASTER_ADDR, 50000000000000000000000, 0)
+    
+    cls.batchCollectionETH(MASTER_ADDR, 9)
     pass
 
 if __name__ == "__main__":
@@ -57,8 +59,8 @@ if __name__ == "__main__":
     # queryStatus()
     
     # 查询 子钱包余额 eth/token
-    query_wallet_balance()
+    # query_wallet_balance()
     
     # 批量操作
-    # batch_op()
+    batch_op()
     pass

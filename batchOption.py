@@ -73,6 +73,46 @@ class batchOption():
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         # tx_receipt = 0
         return tx_hash.hex(), tx_receipt
+    
+    
+    def offlineSignAllBalance(self, privkey, to, amount):
+        if len(to) != 40 and (len(to) != 42 or to[0:2] != '0x'):
+            return json.dumps({'code': 1, 'data': 'Invalid address'})
+
+        sendfrom = eth_account.Account.from_key(privkey)
+        price = self.w3.eth.gas_price
+        nonce = self.w3.eth.get_transaction_count(sendfrom.address, "pending")
+        idC = self.w3.eth.chain_id;
+        # 准备交易（不包括gas限制）
+        transaction = {
+            'to': to,
+            'gasPrice': price,
+            'nonce': nonce,
+            'chainId': idC
+        }
+        # 估算gas限制
+        gas_estimate = self.w3.eth.estimate_gas(transaction)
+        # 估算gas限制
+        gas_estimate = 21000  # ETH转账的固定gas消耗
+        gas_cost = gas_estimate * price
+        
+        # 计算实际可转账金额 = 总余额 - gas成本
+        max_amount = amount - gas_cost
+        if max_amount <= 0:
+            return json.dumps({'code': 1, 'data': 'Insufficient balance for gas'})
+
+        # 设置转账金额
+        transaction['value'] = max_amount
+        transaction['gas'] = gas_estimate
+        # 签名交易
+        signed_txn = self.w3.eth.account.sign_transaction(transaction, privkey)
+        # 发送交易
+        tx_hash = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        # 等待交易被确认
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        # tx_receipt = 0
+        return tx_hash.hex(), tx_receipt
+
 
 
     def batchTransfer(self, privkey:str, amount:float, retry_idx:int):
@@ -87,6 +127,24 @@ class batchOption():
             print(f"txid is {txid}")
             # print(f"receipt is {receipt}")
             time.sleep(1)
+    
+    # 批量归集eth
+    def batchCollectionETH(self, masterAddr, retry_idx:int):
+        sql_data = f"select * from BatchWallet"
+        accounts = self.db_account.getData(sql_data)
+        account_count  = len(accounts)
+        for index in range(retry_idx, account_count):
+            address = accounts[index][0]
+            privkey = accounts[index][1]
+            
+            amount = self.w3.eth.get_balance(address)
+            if(amount >= 21000):
+                txid, receipt = self.offlineSignAllBalance(privkey, masterAddr, amount)
+
+                print(f"{index}-Collection Process Address: {address}")
+                print(f"txid is {txid}")
+                # print(f"receipt is {receipt}")
+                # time.sleep(1)
 
     # 合约操作
     def batchMint(self, retry_idx:int):
